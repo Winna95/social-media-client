@@ -4,9 +4,7 @@
   "description": "Test",
   "main": "index.js",
   "scripts": {
-    "pre-build": "sass src/scss:dist/css",
-    "build": "vite build",
-    "dev": "vite",
+    "build": "sass src/scss:dist/css",
     "start": "sass --watch src/scss:dist/css & live-server",
     "start-server": "live-server",
     "format": "prettier -w src/**/*.js",
@@ -23,8 +21,7 @@
     "lint-staged": "^15.0.2",
     "live-server": "^1.2.2",
     "prettier": "^3.0.3",
-    "sass": "^1.54.8",
-    "vite": "^3.1.0"
+    "sass": "^1.54.8"
   },
   "dependencies": {
     "bootstrap-dark-5": "^1.1.3"

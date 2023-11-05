@@ -9,6 +9,8 @@ export async function login(email, password) {
     headers: headers("application/json")
   })
 
+  alert('resopnse: ' + response)
+
   if (response.ok) {
     const profile = await response.json()
     save("token", profile.accessToken)

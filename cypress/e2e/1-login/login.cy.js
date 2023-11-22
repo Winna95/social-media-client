@@ -6,37 +6,30 @@ describe("The social media app", () => {
   })
 
   it("can login a user and access their profile", () => {
-    cy.intercept('POST', `${apiPath}/social/auth/register`, (req) => {
-      req.reply({
-        status: 200,
-        body: {},
-      });
-    }).as('registerRequest');
+    cy.wait(500)
+    cy.get('.modal-footer button[data-auth="login"]').click();
 
-    cy.intercept('POST', `${apiPath}/social/auth/login`, (req) => {
-      req.reply({
-        status: 200,
-        body: {
-          accessToken: "this-is-a-token",
-          name: name
-        },
-      });
-    }).as('loginRequest');
+    cy.intercept('POST', `${apiPath}/social/auth/login`).as('loginRequest');
 
-    const name = "A-name";
-    const email = "user@noroff.no";
-    const password = "aStr0ngPassword!";
-    const avatarUrl = "http://picture.it/avatar";
 
-    cy.get('[id="registerPassword"]').type(`${password}`);
-    cy.get('[id="registerName"]').type(`${name}`);
-    cy.get('[id="registerEmail"]').type(`${email}`);
-    cy.get('[id="registerAvatar"]').type(`${avatarUrl}`);
+    const email = "gurilalla@noroff.no";
+    const password = "Gurilalla123.";
 
-    cy.get('button[type="submit"]:contains("Create Profile")').click();
+
+    cy.get('[id="loginPassword"]').type(`${password}`, {force: true});
+    cy.wait(200)
+    cy.get('[id="loginEmail"]').type(`${email}`, {force: true});
+    cy.wait(200)
+    cy.get('.modal-footer button[type="submit"].btn-success:contains("Login")').click();
+
+
+
     cy.wait('@loginRequest')
 
-    cy.get('div.btn.btn-success.ps-4:contains("A-name")').should('be.visible')
+    cy.get('h4.mb-0.profile-name')
+        .should('exist')
+        .should('have.text', 'GuriLalla');
+
   })
 
   it("cannot submit the login-form with invalid credentials", () => {
@@ -48,9 +41,11 @@ describe("The social media app", () => {
 
     cy.get('div.modal-footer button.btn.btn-outline-success[data-bs-target="#loginModal"][data-auth="login"]').click();
 
-    cy.get('[id="loginEmail"]').type(`${email}`);
-    cy.wait(50)
-    cy.get('[id="loginPassword"]').type(`${password}{enter}`);
+    cy.get('[id="loginEmail"]').type(`${email}`, {force: true});
+    cy.wait(200);
+    cy.get('[id="loginPassword"]').type(`${password}`,{force: true});
+    cy.wait(200);
+    cy.get('.modal-footer button[type="submit"].btn-success:contains("Login")').click();
 
     cy.contains(`Please include an '@' in the email address. '${email}' is missing an '@'`).should('be.visible');;
   })
